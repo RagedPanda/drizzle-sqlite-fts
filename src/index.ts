@@ -1,2 +1,9 @@
-// The public API is added feature by feature: the fts5() declaration, the migration CLI and the query helpers.
-export {};
+export {fts5} from './declare.ts';
+export type {
+	AnyFts5Index,
+	DetachedOptions,
+	ExternalContentOptions,
+	Fts5Index,
+	Fts5Mode,
+	Fts5Options,
+} from './declare.ts';
