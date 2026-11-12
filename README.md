@@ -59,11 +59,11 @@ Contentless and standalone indexes can be declared too, with `fts5('docs', {mode
 | `fts5()` declaration with checks up front and a typed query handle | Done |
 | SQL for the index, sync triggers, backfill and drop, tested against a real SQLite database | Done |
 | Migration state across branches, and detecting drizzle-kit table rebuilds | Done |
-| `generate`, `check` and `sql` commands, plus a `drizzle-kit push` filter | In progress |
+| `generate`, `check` and `sql` commands, plus a `drizzle-kit push` filter | Done |
 | `match`, `bm25`, `highlight` and `snippet` query helpers | Done |
 | Full API reference, benchmarks and the first npm release | Planned |
 
-Tested in CI with better-sqlite3. libsql and node:sqlite are planned for the end-to-end tests; bun:sqlite and Cloudflare D1 should work with the generated SQL but won't be tested in 0.1.
+Tested in CI with better-sqlite3, libsql and node:sqlite; bun:sqlite and Cloudflare D1 should work with the generated SQL but won't be tested in 0.1.
 
 ## Related
 

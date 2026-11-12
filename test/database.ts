@@ -7,7 +7,7 @@ export function migrate(client: Database.Database, statements: readonly string[]
 }
 
 /** Runs a whole migration file the way drizzle-kit's migrator does. */
-export function runMigration(client: Database.Database, migration: string): void {
+export function runMigration(client: {exec(sql: string): unknown}, migration: string): void {
 	for (const statement of migration.split(statementBreakpoint)) {
 		client.exec(statement);
 	}
