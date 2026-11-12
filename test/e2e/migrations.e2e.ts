@@ -3,6 +3,7 @@ import {readFileSync, rmSync, writeFileSync} from 'node:fs';
 import path from 'node:path';
 import {DatabaseSync} from 'node:sqlite';
 import {test} from 'node:test';
+import {setTimeout} from 'node:timers/promises';
 import {createClient} from '@libsql/client';
 import Database from 'better-sqlite3';
 import {drizzle} from 'drizzle-orm/better-sqlite3';
@@ -69,6 +70,8 @@ test('generate, check and migrate a real project with drizzle-kit, through a tab
 	writeFileSync(path.join(cwd, 'db/notes.ts'), tables('integer().notNull().default(0)'));
 	writeFileSync(path.join(cwd, 'db/index.ts'), searchFile('notes'));
 	writeFileSync(path.join(cwd, 'drizzle.config.ts'), config().replace('./db/search', './db/index'));
+	// Drizzle Kit 1.0 names migration folders by the second, so a migration made in the same second as ours could sort before it.
+	await setTimeout(1000);
 	assert.equal(environment.runDrizzleKit(['generate', '--config=drizzle.config.ts']), 0);
 	assert.match(readFileSync(migrationFiles(outFolder)[2]!, 'utf8'), /__new_notes/);
 	assert.equal(await runCli(['check'], environment), 1);
