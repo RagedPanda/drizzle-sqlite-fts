@@ -1,5 +1,14 @@
 # drizzle-sqlite-fts
 
+[![npm version](https://img.shields.io/npm/v/drizzle-sqlite-fts)](https://www.npmjs.com/package/drizzle-sqlite-fts)
+[![CI](https://github.com/RagedPanda/drizzle-sqlite-fts/actions/workflows/ci.yml/badge.svg)](https://github.com/RagedPanda/drizzle-sqlite-fts/actions/workflows/ci.yml)
+[![coverage](https://img.shields.io/badge/coverage-100%25-brightgreen)](https://github.com/RagedPanda/drizzle-sqlite-fts/actions/workflows/ci.yml)
+[![npm downloads](https://img.shields.io/npm/dm/drizzle-sqlite-fts)](https://www.npmjs.com/package/drizzle-sqlite-fts)
+[![types](https://img.shields.io/npm/types/drizzle-sqlite-fts)](https://www.npmjs.com/package/drizzle-sqlite-fts)
+[![drizzle-orm](https://img.shields.io/npm/dependency-version/drizzle-sqlite-fts/peer/drizzle-orm)](https://orm.drizzle.team)
+[![node](https://img.shields.io/node/v/drizzle-sqlite-fts)](https://nodejs.org)
+[![license](https://img.shields.io/npm/l/drizzle-sqlite-fts)](LICENSE)
+
 SQLite FTS5 full-text search for [Drizzle ORM](https://orm.drizzle.team). Declare a search index next to the table it searches. You get the virtual table, the sync triggers and the backfill as ordinary drizzle-kit migrations, and you query the index with typed helpers that are safe to use with user input.
 
 ```ts
