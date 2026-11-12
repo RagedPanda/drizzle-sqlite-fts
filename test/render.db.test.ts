@@ -3,27 +3,14 @@ import {test} from 'node:test';
 import Database from 'better-sqlite3';
 import {integer, sqliteTable, text} from 'drizzle-orm/sqlite-core';
 import {getFts5Definition} from '../src/declare.ts';
-import {copyStandaloneSql, createSql, dropIndexSql, joinStatements} from '../src/render.ts';
+import {copyStandaloneSql, createSql, dropIndexSql} from '../src/render.ts';
 import {toIndexSpec, type IndexSpec} from '../src/spec.ts';
 import {fts5} from '../src/index.ts';
+import {assertIntact, migrate, search} from './database.ts';
 
 const notesTable = 'CREATE TABLE notes (id integer PRIMARY KEY, title text NOT NULL, body text, views integer NOT NULL DEFAULT 0)';
 const notes = sqliteTable('notes', {id: integer('id').primaryKey(), title: text('title').notNull(), body: text('body'), views: integer('views').notNull().default(0)});
 const notesSpec = toIndexSpec(getFts5Definition(fts5('notes_fts', {table: notes, columns: ['title', 'body']}))!, undefined);
-
-/** Runs statements the way drizzle-kit's migrator does: split on breakpoints, one at a time. */
-function migrate(client: Database.Database, statements: readonly string[]) {
-	for (const statement of joinStatements(statements).split('--> statement-breakpoint')) {
-		client.exec(statement);
-	}
-}
-
-const search = (client: Database.Database, index: string, query: string) =>
-	client.prepare(`SELECT rowid AS id FROM "${index}" WHERE "${index}" MATCH ? ORDER BY rowid`).all(query).map(row => (row as {id: number}).id);
-
-function assertIntact(client: Database.Database, index: string) {
-	client.prepare(`INSERT INTO "${index}"("${index}", rank) VALUES ('integrity-check', 1)`).run();
-}
 
 function seededNotes() {
 	const client = new Database(':memory:');
