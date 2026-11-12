@@ -282,27 +282,35 @@ function contentRowidColumn(name: string, table: SQLiteTable, tableColumns: Reco
 	return primaryKey;
 }
 
+/**
+ * Throws when an index's database column names include one FTS5 reserves, or the same name twice.
+ * Names compare case-insensitively, as SQLite compares them.
+ */
+export function assertColumnNames(indexName: string, columnNames: readonly string[]): void {
+	const seen = new Set<string>();
+	for (const columnName of columnNames) {
+		const lowerName = columnName.toLowerCase();
+		if (reservedColumnNames.has(lowerName) || lowerName === indexName.toLowerCase()) {
+			throw new TypeError(`fts5("${indexName}") can't index a column named "${columnName}", because FTS5 reserves it. Rename the column.`);
+		}
+
+		if (seen.has(lowerName)) {
+			throw new TypeError(`fts5("${indexName}") lists the column "${columnName}" twice`);
+		}
+
+		seen.add(lowerName);
+	}
+}
+
 function assertValidNames(definition: Fts5Definition): void {
 	const {name} = definition;
-	const seen = new Set<string>();
-	for (const {key, column} of definition.columns) {
+	for (const {key} of definition.columns) {
 		if (reservedColumnNames.has(key)) {
 			throw new TypeError(`fts5("${name}") can't index a column with the key "${key}", because the handle uses it for FTS5's own ${key}. Rename the key.`);
 		}
-
-		const columnName = column?.name ?? key;
-		const lowerName = columnName.toLowerCase();
-		if (reservedColumnNames.has(lowerName) || lowerName === name.toLowerCase()) {
-			throw new TypeError(`fts5("${name}") can't index a column named "${columnName}", because FTS5 reserves it. Rename the column.`);
-		}
-
-		const lowerKey = (column?.name ?? key).toLowerCase();
-		if (seen.has(lowerKey)) {
-			throw new TypeError(`fts5("${name}") lists the column "${key}" twice`);
-		}
-
-		seen.add(lowerKey);
 	}
+
+	assertColumnNames(name, definition.columns.map(({key, column}) => column?.name ?? key));
 
 	if (definition.tokenize !== undefined) {
 		assertName(definition.tokenize, `fts5("${name}") tokenize`);
