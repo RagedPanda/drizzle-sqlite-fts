@@ -39,7 +39,8 @@
 		"typecheck": "tsc --noEmit",
 		"test": "node --test \"test/**/*.test.ts\" \"test/e2e/*.e2e.ts\"",
 		"coverage": "node --test --experimental-test-coverage --test-coverage-exclude=\"test/**\" --test-coverage-exclude=\"scripts/**\" --test-coverage-exclude=\"src/cli/bin.ts\" --test-coverage-lines=100 --test-coverage-branches=100 --test-coverage-functions=100 \"test/**/*.test.ts\"",
-		"prepublishOnly": "npm run typecheck && npm test && npm run build"
+		"prepublishOnly": "npm run typecheck && npm test && npm run build",
+		"bench": "node --expose-gc bench/index.ts"
 	},
 	"keywords": [
 		"drizzle",
@@ -70,11 +71,20 @@
 	},
 	"devDependencies": {
 		"@libsql/client": "^0.18.0",
+		"@siftlite/core": "^0.3.0",
+		"@siftlite/fts5": "^0.3.0",
+		"@siftlite/node": "^0.3.0",
 		"@types/better-sqlite3": "^9.6.0",
 		"@types/node": "^26.6.6",
 		"better-sqlite3": "^13.1.1",
 		"drizzle-kit": "0.31.11",
 		"drizzle-orm": "0.45.4",
+		"minisearch": "^7.2.0",
 		"typescript": "^7.0.2"
+	},
+	"overrides": {
+		"@siftlite/node": {
+			"better-sqlite3": "$better-sqlite3"
+		}
 	}
 }

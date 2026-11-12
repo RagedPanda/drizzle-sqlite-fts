@@ -72,3 +72,8 @@ jobs:
       - run: npm run build
       # Checks that the ESM and CommonJS builds each resolve with their own types.
       - run: npx --yes @arethetypeswrong/cli@0.18.5 --pack
+      # A small benchmark run, so the script keeps working against the current API.
+      - run: npm run bench
+        env:
+          BENCH_ROWS: 1000
+          BENCH_RUNS: 1
