@@ -95,15 +95,19 @@ test('drizzle-kit push keeps the index when the config filters it out', {timeout
 
 	const sqlOutput: string[] = [];
 	assert.equal(await runCli(['sql'], {...environment, print: text => sqlOutput.push(text)}), 0);
+	// Closed in the test rather than in an after hook, which would run after the folder is removed: Windows can't remove an open file.
 	const client = new Database(path.join(cwd, 'local.db'));
-	t.after(() => client.close());
-	client.exec(sqlOutput.join('\n'));
-	client.prepare('INSERT INTO notes (id, title) VALUES (1, \'pushed\')').run();
+	try {
+		client.exec(sqlOutput.join('\n'));
+		client.prepare('INSERT INTO notes (id, title) VALUES (1, \'pushed\')').run();
 
-	// The second push sees only notes, which is unchanged, so it leaves the index and its shadow tables alone.
-	assert.equal(environment.runDrizzleKit(['push', '--config=drizzle.config.ts', '--force']), 0);
-	assert.deepEqual(search(client, 'notes_fts', 'pushed'), [1]);
-	assertIntact(client, 'notes_fts');
+		// The second push sees only notes, which is unchanged, so it leaves the index and its shadow tables alone.
+		assert.equal(environment.runDrizzleKit(['push', '--config=drizzle.config.ts', '--force']), 0);
+		assert.deepEqual(search(client, 'notes_fts', 'pushed'), [1]);
+		assertIntact(client, 'notes_fts');
+	} finally {
+		client.close();
+	}
 });
 
 test('the generated migrations run on libsql and node:sqlite too', {timeout: 120_000}, async t => {
