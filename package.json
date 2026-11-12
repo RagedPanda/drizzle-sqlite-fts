@@ -1,6 +1,6 @@
 {
 	"name": "drizzle-sqlite-fts",
-	"version": "0.1.0",
+	"version": "0.1.1",
 	"description": "SQLite FTS5 full-text search for Drizzle ORM: declare an index next to your table, get the virtual table, sync triggers and backfill as Drizzle migrations, and query it with typed, injection-safe helpers",
 	"license": "MIT",
 	"author": "Ankur Dubey (https://github.com/RagedPanda)",

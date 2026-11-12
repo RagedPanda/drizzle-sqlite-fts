@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.1.1] - 2026-11-12
+
+### Changed
+
+- Releases are published from GitHub Actions through npm trusted publishing (OIDC), with provenance, without an npm token stored in the repository. The package contents are the same as 0.1.0. ([#14](https://github.com/RagedPanda/drizzle-sqlite-fts/pull/14) by [@RagedPanda](https://github.com/RagedPanda))
+
 ## [0.1.0] - 2026-11-12
 
 ### Added
@@ -16,5 +22,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - A `drizzle-sqlite-fts` CLI. `generate` writes the SQL for the indexes that changed into a migration drizzle-kit creates, and recreates the sync triggers when drizzle-kit rebuilds a table and drops them. `check` exits with 1 when an index changed without a migration, for CI. `sql` prints everything for a database you set up by hand. Changes that would lose rows or cannot run are refused with exit code 2, and nothing is written. ([#7](https://github.com/RagedPanda/drizzle-sqlite-fts/pull/7) by [@RagedPanda](https://github.com/RagedPanda))
 - `ftsTablesFilter()` returns `tablesFilter` patterns that stop `drizzle-kit push` from dropping your indexes and their shadow tables. ([#7](https://github.com/RagedPanda/drizzle-sqlite-fts/pull/7) by [@RagedPanda](https://github.com/RagedPanda))
 
-[Unreleased]: https://github.com/RagedPanda/drizzle-sqlite-fts/compare/v0.1.0...HEAD
+[Unreleased]: https://github.com/RagedPanda/drizzle-sqlite-fts/compare/v0.1.1...HEAD
+[0.1.1]: https://github.com/RagedPanda/drizzle-sqlite-fts/compare/v0.1.0...v0.1.1
 [0.1.0]: https://github.com/RagedPanda/drizzle-sqlite-fts/releases/tag/v0.1.0
