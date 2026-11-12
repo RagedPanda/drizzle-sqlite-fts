@@ -1,0 +1,72 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+        node: [22, 24]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node }}
+      - run: npm ci
+      - run: npm run typecheck
+      - run: npm test
+      - run: npm run build
+
+  drizzle-versions:
+    # The oldest supported release, the current one, and the 1.0 release candidate,
+    # each with the drizzle-kit it ships with.
+    strategy:
+      matrix:
+        include:
+          - orm: 0.36.4
+            kit: 0.28.1
+          - orm: 0.45.4
+            kit: 0.31.11
+          - orm: 1.0.0-rc.5
+            kit: 1.0.0-rc.5
+    name: drizzle-orm ${{ matrix.orm }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - run: npm ci
+      - run: npm install --no-save drizzle-orm@${{ matrix.orm }} drizzle-kit@${{ matrix.kit }}
+      - run: npm test
+
+  coverage:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - run: npm ci
+      # Fails the job if line, branch or function coverage drops below 100%.
+      - run: npm run coverage
+
+  package:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - run: npm ci
+      - run: npm run build
+      # Checks that the ESM and CommonJS builds each resolve with their own types.
+      - run: npx --yes @arethetypeswrong/cli@0.18.5 --pack

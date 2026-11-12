@@ -1,0 +1,74 @@
+{
+	"name": "drizzle-sqlite-fts",
+	"version": "0.0.0",
+	"description": "SQLite FTS5 full-text search for Drizzle ORM: declare an index next to your table, get the virtual table, sync triggers and backfill as Drizzle migrations, and query it with typed, injection-safe helpers",
+	"license": "MIT",
+	"author": "Ankur Dubey (https://github.com/RagedPanda)",
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/RagedPanda/drizzle-sqlite-fts.git"
+	},
+	"type": "module",
+	"main": "./dist/cjs/index.js",
+	"types": "./dist/cjs/index.d.ts",
+	"exports": {
+		".": {
+			"import": {
+				"types": "./dist/esm/index.d.ts",
+				"default": "./dist/esm/index.js"
+			},
+			"require": {
+				"types": "./dist/cjs/index.d.ts",
+				"default": "./dist/cjs/index.js"
+			}
+		},
+		"./package.json": "./package.json"
+	},
+	"files": [
+		"dist"
+	],
+	"sideEffects": false,
+	"engines": {
+		"node": ">=22.12"
+	},
+	"scripts": {
+		"build": "node -e \"fs.rmSync('dist', {recursive: true, force: true})\" && tsc -p tsconfig.esm.json && tsc -p tsconfig.cjs.json && node scripts/mark-cjs.ts",
+		"typecheck": "tsc --noEmit",
+		"test": "node --test \"test/**/*.test.ts\"",
+		"coverage": "node --test --experimental-test-coverage --test-coverage-exclude=\"test/**\" --test-coverage-exclude=\"scripts/**\" --test-coverage-lines=100 --test-coverage-branches=100 --test-coverage-functions=100 \"test/**/*.test.ts\"",
+		"prepublishOnly": "npm run typecheck && npm test && npm run build"
+	},
+	"keywords": [
+		"drizzle",
+		"drizzle-orm",
+		"drizzle-kit",
+		"sqlite",
+		"fts5",
+		"full-text-search",
+		"search",
+		"libsql",
+		"turso",
+		"d1",
+		"better-sqlite3",
+		"bm25",
+		"migrations"
+	],
+	"peerDependencies": {
+		"drizzle-kit": ">=0.28.1",
+		"drizzle-orm": ">=0.36.4"
+	},
+	"peerDependenciesMeta": {
+		"drizzle-kit": {
+			"optional": true
+		}
+	},
+	"devDependencies": {
+		"@libsql/client": "^0.18.0",
+		"@types/better-sqlite3": "^9.6.0",
+		"@types/node": "^26.6.6",
+		"better-sqlite3": "^13.1.1",
+		"drizzle-kit": "0.31.11",
+		"drizzle-orm": "0.45.4",
+		"typescript": "^7.0.2"
+	}
+}
