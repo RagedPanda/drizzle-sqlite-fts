@@ -2,7 +2,7 @@ import assert from 'node:assert/strict';
 import {test} from 'node:test';
 import Database from 'better-sqlite3';
 import {drizzle} from 'drizzle-orm/better-sqlite3';
-import {fts5, type AnyFts5Index, type Fts5Mode} from '../src/index.ts';
+import {bm25, fts5, highlight, snippet, type AnyFts5Index, type Fts5Mode, type IndexedColumnKey} from '../src/index.ts';
 import {fts5Definition} from '../src/declare.ts';
 import {notes} from './fixtures.ts';
 
@@ -24,6 +24,20 @@ const modes: Fts5Mode[] = ['external', 'contentless', 'standalone'];
 // Indexes of every mode fit in one list.
 const indexes: AnyFts5Index[] = [notesSearch, docs];
 
+// Query helpers take the index's column keys, and highlight and snippet refuse a contentless index.
+expectType<Equal<IndexedColumnKey<typeof notesSearch>, 'title' | 'body'>>();
+const queryHelpers = [
+	() => bm25(notesSearch, {title: 10}),
+	// @ts-expect-error: "views" is not indexed.
+	() => bm25(notesSearch, {views: 2}),
+	// @ts-expect-error: "views" is not indexed.
+	() => highlight(notesSearch, 'views', {open: '', close: ''}),
+	// @ts-expect-error: a contentless index doesn't keep the text to highlight.
+	() => highlight(docs, 'title', {open: '', close: ''}),
+	// @ts-expect-error: a contentless index doesn't keep the text to cut a snippet from.
+	() => snippet(docs, 'title'),
+];
+
 const selectRows = () => {
 	const db = drizzle({client: new Database(':memory:')});
 	return db.select({title: notesSearch.title, body: notesSearch.body, rowid: notesSearch.rowid, rank: notesSearch.rank}).from(notesSearch);
@@ -36,5 +50,6 @@ test('the type checks in this file compile', () => {
 	assert.equal(indexes.length, 2);
 	assert.equal(modes.length, 3);
 	assert.equal(typeof selectRows, 'function');
+	assert.equal(queryHelpers.length, 5);
 	assert.throws(declareMissing, /no column with the key "missing"/);
 });

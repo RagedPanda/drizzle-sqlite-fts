@@ -97,11 +97,19 @@ type ExistingView<TName extends string, TColumns extends Parameters<typeof sqlit
  */
 export type Fts5Index<TName extends string, TColumns extends Parameters<typeof sqliteView>[1], TMode extends Fts5Mode> = ExistingView<TName, HandleColumns<TColumns>> & {
 	readonly [fts5Definition]: DefinitionFor<TMode>;
+	readonly [indexedColumnKeys]?: keyof TColumns & string;
 };
+
+/** Type-only: carries the keys of an index's columns, so the query helpers can check a column name. */
+declare const indexedColumnKeys: unique symbol;
+
+/** The keys of the columns `TIndex` indexes, without `rowid` and `rank`. */
+export type IndexedColumnKey<TIndex extends AnyFts5Index> = NonNullable<TIndex[typeof indexedColumnKeys]>;
 
 /** Any value `fts5()` returns. */
 export type AnyFts5Index = {
 	readonly [fts5Definition]: Fts5Definition;
+	readonly [indexedColumnKeys]?: string;
 };
 
 /** FTS5 rejects these as column names, in any letter case, and the handle uses them for its own columns. */
