@@ -57,8 +57,8 @@ Contentless and standalone indexes can be declared too, with `fts5('docs', {mode
 |---|---|
 | Package scaffold: ESM and CommonJS builds, CI on Linux, macOS and Windows, drizzle-orm 0.36, 0.45 and 1.0-rc | Done |
 | `fts5()` declaration with checks up front and a typed query handle | Done |
-| SQL for the index, sync triggers, backfill and drop, tested against a real SQLite database | Built, PR coming |
-| Migration state across branches, and detecting drizzle-kit table rebuilds | Next |
+| SQL for the index, sync triggers, backfill and drop, tested against a real SQLite database | Done |
+| Migration state across branches, and detecting drizzle-kit table rebuilds | In progress |
 | `generate`, `check` and `sql` commands, plus a `drizzle-kit push` filter | Planned |
 | `match`, `bm25`, `highlight` and `snippet` query helpers | Planned |
 | Full API reference, benchmarks and the first npm release | Planned |
